@@ -17,21 +17,36 @@
           <span class="text">{{seller.supports[0].description}}</span>
         </div>
       </div>
-      <div class="support-count" v-if="seller.supports">
+      <div class="support-count" v-if="seller.supports" @click="showDetail">
           <span class="count">{{seller.supports.length}}个</span>
           <i class="icon-keyboard_arrow_right"></i>
       </div>
     </div>
-    <div class="bulletin-wrapper">
+    <div class="bulletin-wrapper" @click="showDetail">
       <span class="bulletin-title"> </span><span class="bulletin-text">{{seller.bulletin}}</span>
       <span class="icon-keyboard_arrow_right"></span>
     </div>
     <div class="background">
       <img :src="seller.avatar" width="100%" height="100%" alt="">
     </div>
+    <div v-show="detailShow" class="detail">
+      <div class="detail-wrapper clearfix">
+        <div class="detail-main">
+          <h1 class="name">{{seller.name}}</h1>
+          <div class="star-wrapper">
+            <star  :size="24" :score="3.7"></star>            
+          </div>
+        </div>
+      </div>
+      <div class="detail-close">
+        <i class="icon-close"></i>
+      </div>
+    </div>
   </div>
 </template>
 <script>
+import star from '@/components/star/star'
+
 export default {
   props:{
     seller: {
@@ -40,11 +55,20 @@ export default {
   },
   data(){
    return {
-     classMap:[]
+     classMap:[],
+     detailShow: false
    }
   },
   created() {
     this.classMap = ['decrease','discount','special','invoice','guarantee']
+  },
+  components:{
+    star
+  },
+  methods:{
+    showDetail(){
+      this.detailShow = true
+    }
   }
 }
 </script>
@@ -52,6 +76,7 @@ export default {
 @import '~common/stylus/varibel.styl'
 .header
   position: relative
+  overflow:hidden
   color: #ffffff
   background: rgba(7,17,27,.5)
   .content-wrapper
@@ -159,5 +184,36 @@ export default {
     width: 100%
     height: 100%
     z-index: -1 
-    filter: blur(10px)  
+    filter: blur(10px) 
+  .detail
+    position: fixed
+    left:0
+    top: 0
+    z-index: 100
+    width: 100%
+    height: 100%
+    overflow: auto 
+    background: rgba(7,1,27,.8)
+    
+    .detail-wrapper
+      min-height: 100%
+      .detail-main
+        margin-top: 64px
+        padding-bottom: 64px
+        .name
+          line-height: 16px
+          text-align: center
+          font-size: 16px
+          font-weight: 700
+        .star-wrapper
+          margin-top: 18px
+          padding: 2px 0
+          text-align: center
+    .detail-close     
+      position: relative 
+      width: 32px
+      height: 32px
+      margin: -64px auto 0 auto 
+      clear: both
+      font-size: 32px
 </style>
