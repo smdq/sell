@@ -4,6 +4,10 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 
+/* 引入样式 */
+import './common/stylus/border.css'
+import './common/stylus/icon.css'
+
 Vue.config.productionTip = false
 
 /* eslint-disable no-new */
