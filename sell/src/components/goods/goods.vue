@@ -35,10 +35,12 @@
         </li>
       </ul>
     </div>
+    <shop-cart :deliveryPrice="seller.deliveryPrice" :minPrice="seller.minPrice"></shop-cart>
   </div>
 </template>
 <script>
 import BScroll from 'better-scroll'
+import shopCart from '@/components/shopcart/shopcart'
 const ERR_OK = 0
 export default {
   props:{
@@ -66,7 +68,7 @@ export default {
 
           this._initScroll()
           this._calculateHeight()
-          
+         
         })
       }
     })
@@ -114,8 +116,8 @@ export default {
       })
 
       this.foodsScroll.on('scroll',(pos) =>{
-        this.scrollY = Math.abs(Math.round(pos.y))
-        console.log(this.scrollY)
+        this.scrollY = Math.abs(pos.y)
+        //console.log(this.scrollY)
       })
     },
 
@@ -131,6 +133,9 @@ export default {
       }
       //console.log(this.listHeight)
     }
+  },
+  components:{
+    shopCart
   }
 }
 </script>
