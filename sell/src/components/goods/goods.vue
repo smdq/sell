@@ -29,18 +29,22 @@
                   <span class="now">￥{{food.price}}</span>
                   <span class="old" v-show="food.oldPrice">￥{{food.oldPrice}}</span>
                 </div>
+                <div class="cartcontrol-wrapper">
+                  <cartcontrol @cartadd="addChange" :food="food"></cartcontrol>
+                </div>
               </div>
             </li>
           </ul>
         </li>
       </ul>
     </div>
-    <shop-cart :deliveryPrice="seller.deliveryPrice" :minPrice="seller.minPrice"></shop-cart>
+    <shop-cart ref="shopcart" :selectFoods="selectFoods" :deliveryPrice="seller.deliveryPrice" :minPrice="seller.minPrice"></shop-cart>
   </div>
 </template>
 <script>
 import BScroll from 'better-scroll'
 import shopCart from '@/components/shopcart/shopcart'
+import cartcontrol from '@/components/cartcontrol/cartcontrol'
 const ERR_OK = 0
 export default {
   props:{
@@ -87,6 +91,17 @@ export default {
        }
      }
      return 0
+   },
+   selectFoods(){
+     let foods =[];
+     this.goods.forEach((good) =>{
+       good.foods.forEach((food)=>{
+         if(food.count){
+           foods.push(food)
+         }
+       })
+     })
+     return foods
    }
    
   },
@@ -132,10 +147,18 @@ export default {
         this.listHeight.push(height)
       }
       //console.log(this.listHeight)
+    },
+    _drop(target){
+      this.$refs.shopcart.drop(target);
+    },
+    addChange(target){
+     this._drop(target)
     }
+
   },
   components:{
-    shopCart
+    shopCart,
+    cartcontrol
   }
 }
 </script>
@@ -234,6 +257,10 @@ export default {
          .price
            font-weigth: 700
            line-height: 24px
+         .cartcontrol-wrapper
+           position: absolute 
+           right: 0
+           bottom 12px
            .now
              margin-right: 18px
              font-size: 14px
