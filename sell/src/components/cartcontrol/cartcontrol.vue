@@ -61,7 +61,7 @@ export default {
      line-height: 24px
      text-align: center
      font-size: 10px 
-     background:rgb(147,153,159)
+     
    .cart-add
      display:inline-block
      lien-height: 24px
