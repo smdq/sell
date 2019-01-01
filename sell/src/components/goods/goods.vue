@@ -1,5 +1,6 @@
 <template>
-  <div class="goods">
+  <div>
+    <div class="goods">
     <div class="menu-wrapper" ref="menu">
       <ul>
         <li class="menu-item border-bottom" @click="selectMenu(index,$event)"  :class="{'current':currentIndex ===index}" v-for="(item,index) in goods" :key="index">
@@ -14,7 +15,7 @@
         <li class="food.list food-list-hook" v-for="(item,index) in goods" :key="index">
           <h1 class="title">{{item.name}}</h1>
           <ul>
-            <li class="food-item border-bottom" v-for="(food,index) in item.foods" :key="index">
+            <li @click="selectfood(food,$event)" class="food-item border-bottom" v-for="(food,index) in item.foods" :key="index">
               <div class="icon">
                 <img width="57" height="57" :src="food.icon" alt="">
               </div>
@@ -40,11 +41,15 @@
     </div>
     <shop-cart ref="shopcart" :selectFoods="selectFoods" :deliveryPrice="seller.deliveryPrice" :minPrice="seller.minPrice"></shop-cart>
   </div>
+  <food @cartadd="addChange" :food="selectedFood" ref="food"></food>
+  </div>
+  
 </template>
 <script>
 import BScroll from 'better-scroll'
 import shopCart from '@/components/shopcart/shopcart'
 import cartcontrol from '@/components/cartcontrol/cartcontrol'
+import food from '@/components/food/food'
 const ERR_OK = 0
 export default {
   props:{
@@ -57,6 +62,7 @@ export default {
      goods:[],
      classMap:[],
      listHeight:[],
+     selectedFood:{},
      scrollY:0
    }
   },
@@ -153,12 +159,22 @@ export default {
     },
     addChange(target){
      this._drop(target)
+    },
+    selectfood(food,event){
+      if(!event._constructed) {
+       return
+     }
+
+     this.selectedFood = food
+
+     this.$refs.food.show()
     }
 
   },
   components:{
     shopCart,
-    cartcontrol
+    cartcontrol,
+    food
   }
 }
 </script>
