@@ -36,6 +36,25 @@
           <ratingselect @ratingType="ratingType" @toggleConten="toggleConten" :selectType="selectType" :onlyContent="onlyContent"
           :desc="desc" :ratings="food.ratings"
           ></ratingselect>
+          <div class="rating-wrapper">
+            <ul v-show="food.ratings&&food.ratings.length">
+              <li v-show="needShow(rating.rateType,rating.text)" class="rating-item border-bottom" v-for="(rating,index) in food.ratings" :key="index">
+                <div class="user">
+                  <span class="name">{{rating.username}}</span>
+                  <img class="avatar" width="12" height="12" :src="rating.avatar" alt="">
+                </div>
+                <div class="time">
+                  {{rating.rateTime | formatDate}}
+                </div>
+                <p class="text">
+                  <span :class="{'icon-thumb_up':rating.rateType===0,'icon-thumb_down':rating.rateType===1}"></span>{{rating.text}}
+                </p>
+              </li>
+            </ul>
+            <div class="no-ratings" v-show="!food.ratings || !food.ratings.length">
+              暂无评价
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -46,6 +65,7 @@ import BScroll from "better-scroll";
 import cartcontrol from "@/components/cartcontrol/cartcontrol";
 import split from "@/components/split/split";
 import ratingselect from "@/components/ratingselect/ratingselect";
+import {formatDate} from 'common/js/date.js'
 import Vue from "vue";
 
 
@@ -100,9 +120,29 @@ export default {
     ratingType(type){
       /* 对应上面的函数不传参数  如：@ratingType="ratingType" */
       this.selectType = type
+      //console.log(this.selectType)
     },
     toggleConten(content){
       this.onlyContent = !this.onlyContent
+      //console.log(this.onlyContent)
+    },
+    needShow(type,text){
+      if(this.onlyContent && !text){
+        return false;
+      }
+
+      if(this.selectType === ALL){
+        return true;
+      }else{
+        return type === this.selectType
+      }
+
+    }
+  },
+  filters:{
+    formatDate(time){
+      let date = new Date(time)
+      return formatDate(date,'yyyy-MM-dd hh:mm')
     }
   },
   components: {
@@ -233,6 +273,46 @@ export default {
         margin-left: 18px
         font-size: 14px
         color: rgb(7,17,27)
+      .rating-wrapper
+        padding: 0 18px 
+        .rating-item
+          position: relative
+          padding: 16px 0
+          .user
+            position: absolute 
+            right: 0
+            top: 16px
+            font-size: 0
+            line-height: 12px
+            .name
+              display: inline-block
+              margin-right: 6px
+              vertical-align: top
+              font-size: 10px
+              color: rgb(147,153,159)
+            .avatar
+              border-radius: 50%
+          .time
+            margin-bottom: 6px
+            line-height: 12px
+            font-size: 10px
+            color: rgb(147,153,159)
+          .text
+            line-height: 16px
+            font-size: 12px
+            color:rgb(7,17,27)
+            .icon-thumb_up,icon-thumb_down
+              line-height: 16px
+              margin-right: 4px
+              font-size: 12px
+            .icon-thumb_up
+              color: rgb(0,160,220)
+            .icon-thumb_down
+              color: rgb(147,153,159)  
+        .no-ratings
+          padding: 16px 0
+          font-size: 12px
+          color: rgb(147,153,159)
 
 .food-detail-enter-active, .food-detail-leave-active 
   transition: 1s;
